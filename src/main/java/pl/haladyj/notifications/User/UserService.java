@@ -2,6 +2,9 @@ package pl.haladyj.notifications.User;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -15,5 +18,13 @@ public class UserService {
 
     public UserDTO findById(Long id){
         return userConverter.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException()));
+    }
+
+    public List<UserDTO> findAllUsers(){
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        userRepository.findAll().forEach(user -> userDTOs.add(userConverter.toDTO(user)));
+
+        return userDTOs;
     }
 }
