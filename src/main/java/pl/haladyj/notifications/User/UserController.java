@@ -2,6 +2,7 @@ package pl.haladyj.notifications.User;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findById(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser (@RequestParam("map") String createdUser){
         Gson gson =new Gson();
         User user = gson.fromJson(createdUser, User.class);
@@ -41,6 +43,30 @@ public class UserController {
         return ResponseEntity.ok().body(userConverter.toDTO(user));
     }
 
+    @PutMapping(value = "/update",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateUser(@RequestParam("map") String createdUser){
+        Gson gson =new Gson();
+        User user = gson.fromJson(createdUser, User.class);
+
+        userService.updateUser(userConverter.toDTO(user));
+
+        return ResponseEntity.ok().body(userConverter.toDTO(user));
+    }
+
+
+    @DeleteMapping(value = "/delete",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteUser(@RequestParam("map") String createdUser){
+        Gson gson =new Gson();
+        User user = gson.fromJson(createdUser, User.class);
+
+        userService.deleteUser(userConverter.toDTO(user));
+
+        return ResponseEntity.ok().body(userConverter.toDTO(user));
+    }
 
 
 }
