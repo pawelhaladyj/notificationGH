@@ -1,5 +1,8 @@
 package pl.haladyj.notifications.User;
 
+import lombok.Data;
+
+@Data
 public class UserDTO {
 
     private Long id;
