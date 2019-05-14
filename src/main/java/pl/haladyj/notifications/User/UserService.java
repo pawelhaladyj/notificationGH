@@ -35,4 +35,16 @@ public class UserService {
 
         return userConverter.toDTO(userRepository.save(user));
     }
+
+    public void updateUser(UserDTO userDTO){
+        User user = userRepository.findById(userDTO.getId()).orElseThrow(()-> new UserNotFoundException());
+        userRepository.save(user);
+    }
+
+    public void deleteUser(UserDTO userDTO){
+        User user = userRepository.findById(userDTO.getId()).orElseThrow(()-> new UserNotFoundException());
+        userRepository.delete(user);
+    }
+
+
 }
