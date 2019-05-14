@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserConverter userConverter;
+    private final UserRepository userRepository;
 
-    public UserService(UserConverter userConverter) {
+    public UserService(UserConverter userConverter, UserRepository userRepository) {
         this.userConverter = userConverter;
+        this.userRepository = userRepository;
     }
 }
