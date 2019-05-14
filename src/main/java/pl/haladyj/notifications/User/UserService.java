@@ -12,4 +12,8 @@ public class UserService {
         this.userConverter = userConverter;
         this.userRepository = userRepository;
     }
+
+    public UserDTO findById(Long id){
+        return userConverter.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException()));
+    }
 }
