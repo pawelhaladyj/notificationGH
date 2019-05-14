@@ -1,7 +1,9 @@
 package pl.haladyj.notifications.User;
 
+import org.springframework.stereotype.Component;
 import pl.haladyj.notifications.Utils.Converter;
 
+@Component
 public class UserConverter implements Converter<User, UserDTO> {
 
     @Override
