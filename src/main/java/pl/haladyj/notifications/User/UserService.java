@@ -27,4 +27,12 @@ public class UserService {
 
         return userDTOs;
     }
+
+    public UserDTO createUser(UserDTO userDTO){
+
+        userRepository.findById(userDTO.getId()).ifPresent(user -> new DuplicateUserException());
+        User user = userConverter.toEntity(userDTO);
+
+        return userConverter.toDTO(userRepository.save(user));
+    }
 }
