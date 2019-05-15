@@ -46,5 +46,14 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public User loginUser(String login, String password){
+        User user = userRepository.findByLogin(login).orElseThrow(()->new UserNotFoundException());
+        if(password!=user.getPassword()){
+            throw new InvalidPasswordException("Błędne hasło");
+        }
+        userRepository.save(user);
+        return user;
+    }
+
 
 }

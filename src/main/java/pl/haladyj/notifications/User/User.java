@@ -23,6 +23,8 @@ public class User {
     private String lastName;
     private Long phoneNumber;
     private String password;
+    private String login;
+    private boolean isAdmin;
 
 
 }
