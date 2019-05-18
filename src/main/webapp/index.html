@@ -10,12 +10,38 @@
 
     <link rel="stylesheet" href="main.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="serialize.js"></script>
+    <script src="create-user.js"></script>
+
 </head>
 <body>
-    <div class="row">
+    <div class="row" id="startRow">
         <input type="submit" value="Zaloguj">
         <input type="submit" value="Zarejestruj">
         <input type="submit" value="zgłoś zdarzenie bez logowania">
+    </div>
+    <div class="row">
+        <form id="registery">
+            <div>
+                <label for="firstName">Imię</label>
+                <input name="firstName" type="text" id="firstName" placeholder="podaj imię">
+            </div>
+            <div>
+                <label for="lastName">Nazwisko</label>
+                <input name="lastName" type="text" id="lastName" placeholder="podaj nazwisko">
+            </div>
+            <div>
+                <label for="email">eMail</label>
+                <input name="email" type="text" id="email" placeholder="podaj email (wymagane)">
+            </div>
+            <div>
+                <label for="phoneNumber">numer telefonu (wewnętrzny)</label>
+                <input name="" type="text" id="phoneNumber" placeholder="podaj nr telefonu">
+            </div>
+        </form>
+        <button type="button" onclick="createUser()">zapisz użytkownika</button>
     </div>
 
 

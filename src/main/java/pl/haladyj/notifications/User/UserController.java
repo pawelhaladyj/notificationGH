@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -33,20 +36,24 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(userService.findById(id));
     }
 
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser (@RequestParam("map") String createdUser){
-        Gson gson =new Gson();
-        User user = gson.fromJson(createdUser, User.class);
+    public ResponseEntity<UserDTO> createUser (@RequestBody @Validated UserDTO userDto){
+        userDto = userService.createUser(userDto);
 
-        userService.createUser(userConverter.toDTO(user));
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(userDto.getId())
+                .toUri();
 
-        return ResponseEntity.ok().body(userConverter.toDTO(user));
+        return ResponseEntity.created(location).body(userDto);
+
     }
 
     @PutMapping(value = "/update",
@@ -74,7 +81,7 @@ public class UserController {
         return ResponseEntity.ok().body(userConverter.toDTO(user));
     }
 
-    @PostMapping(value = "/login",
+   @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity loginUser(@RequestParam("login") String login, @RequestParam("password") String password){
