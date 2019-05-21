@@ -24,7 +24,7 @@ public class User {
     private Long phoneNumber;
     private String password;
     private String login;
-    private boolean Admin;
+
 
 
 }
