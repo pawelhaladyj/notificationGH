@@ -11,11 +11,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@Controller
-@RequestMapping("/users")
+@RestController
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -41,18 +42,9 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findById(id));
     }
 
-    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser (@RequestBody @Validated UserDTO userDto){
-        userDto = userService.createUser(userDto);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(userDto.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(userDto);
+    @PostMapping(value = "/create")
+    public User createUser (@Valid @RequestBody UserDTO userDTO){
+           return userConverter.toEntity(userService.createUser(userDTO));
 
     }
 
@@ -91,7 +83,6 @@ public class UserController {
 
             request.getSession(true);
             session.setAttribute("USER",true);
-            session.setAttribute("ADMIN", user.isAdmin());
 
             return ResponseEntity.ok("{\"message\": \"Logged on\", \"success\" : true}");
         } catch (InvalidPasswordException | UserNotFoundException e){

@@ -30,7 +30,8 @@ public class UserService {
 
     public UserDTO createUser(UserDTO userDTO){
 
-        userRepository.findById(userDTO.getId()).ifPresent(user -> new DuplicateUserException());
+        if(userDTO.getId()==null){userDTO.setId(Long.MIN_VALUE);}
+        userRepository.findById(userDTO.getId()).ifPresent(user -> {throw new UserDuplicateException("Użytkownik o podanym id już istnieje");});
         User user = userConverter.toEntity(userDTO);
 
         return userConverter.toDTO(userRepository.save(user));

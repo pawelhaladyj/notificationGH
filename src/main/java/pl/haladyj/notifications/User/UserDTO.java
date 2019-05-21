@@ -12,5 +12,4 @@ public class UserDTO {
     private Long phoneNumber;
     private String password;
     private String login;
-    private boolean Admin;
 }
