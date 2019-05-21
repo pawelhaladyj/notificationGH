@@ -10,7 +10,7 @@ public class UserConverter implements Converter<User, UserDTO> {
     public User toEntity(UserDTO userDTO) {
         User user = new User();
 
-        //user.setId(userDTO.getId());
+       //user.setId(userDTO.getId());
         user.setEmail(userDTO.getEmail());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -26,13 +26,13 @@ public class UserConverter implements Converter<User, UserDTO> {
     public UserDTO toDTO(User user) {
         UserDTO userDTO = new UserDTO();
 
-        //userDTO.setId(user.getId());
+        userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setPassword(user.getPassword());
-        userDTO.setLogin(user.getLogin());
+        //userDTO.setLogin(user.getLogin());
 
 
         return userDTO;

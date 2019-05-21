@@ -38,27 +38,24 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> findById(@PathVariable Long id){
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) throws UserNotFoundException{
         return ResponseEntity.ok().body(userService.findById(id));
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public User createUser (@Valid @RequestBody UserDTO userDTO){
            return userConverter.toEntity(userService.createUser(userDTO));
 
     }
 
-    @PutMapping(value = "/update",
+  /*  @PutMapping(value = "/{id}",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@RequestParam("map") String createdUser){
-        Gson gson =new Gson();
-        User user = gson.fromJson(createdUser, User.class);
+    public ResponseEntity updateUser(@PathVariable (value = "id") Long userId, @Valid @RequestBody UserDTO userDTO)
+            throws ResourceNotFoundException{
 
-        userService.updateUser(userConverter.toDTO(user));
-
-        return ResponseEntity.ok().body(userConverter.toDTO(user));
-    }
+    }*/
 
 
     @DeleteMapping(value = "/delete",

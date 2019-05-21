@@ -17,7 +17,8 @@ public class UserService {
     }
 
     public UserDTO findById(Long id){
-        return userConverter.toDTO(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException()));
+        return userConverter.toDTO(userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o id::%d", id))));
     }
 
     public List<UserDTO> findAllUsers(){
@@ -31,24 +32,28 @@ public class UserService {
     public UserDTO createUser(UserDTO userDTO){
 
         if(userDTO.getId()==null){userDTO.setId(Long.MIN_VALUE);}
-        userRepository.findById(userDTO.getId()).ifPresent(user -> {throw new UserDuplicateException("Użytkownik o podanym id już istnieje");});
+        userRepository.findById(userDTO.getId()).ifPresent(user ->
+        {throw new UserDuplicateException("Użytkownik o podanym id już istnieje");});
         User user = userConverter.toEntity(userDTO);
 
         return userConverter.toDTO(userRepository.save(user));
     }
 
     public void updateUser(UserDTO userDTO){
-        User user = userRepository.findById(userDTO.getId()).orElseThrow(()-> new UserNotFoundException());
+        User user = userRepository.findById(userDTO.getId()).orElseThrow(()->
+                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o id::%d", userDTO.getId())));
         userRepository.save(user);
     }
 
     public void deleteUser(UserDTO userDTO){
-        User user = userRepository.findById(userDTO.getId()).orElseThrow(()-> new UserNotFoundException());
+        User user = userRepository.findById(userDTO.getId()).orElseThrow(()->
+                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o id::%d", userDTO.getId())));
         userRepository.delete(user);
     }
 
     public User loginUser(String login, String password){
-        User user = userRepository.findByLogin(login).orElseThrow(()->new UserNotFoundException());
+        User user = userRepository.findByLogin(login).orElseThrow(()->
+                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o login::%s", login)));
         if(password!=user.getPassword()){
             throw new InvalidPasswordException("Błędne hasło");
         }
