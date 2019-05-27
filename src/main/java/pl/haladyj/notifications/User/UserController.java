@@ -43,26 +43,15 @@ public class UserController {
 
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public User createUser (@Valid @RequestBody UserDTO userDTO){
-        return userConverter.toEntity(userService.createUser(userDTO));
+    public UserDTO createUser (@Valid @RequestBody UserDTO userDTO){
+        return userService.createUser(userDTO);
     }
-
- /*   @PutMapping(value = "/update",
-            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO)
-            throws UserNotFoundException{
-
-        userService.updateUser(userDTO);
-
-        return ResponseEntity.noContent().build();
-    }*/
 
 
     @PutMapping(value = "/update",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> update (@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> update (@RequestBody UserDTO userDTO) {
 
         Optional<User> user = userRepository.findById(userDTO.getId());
 
@@ -75,38 +64,9 @@ public class UserController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @DeleteMapping(value = "/delete",
-            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteUser(@RequestParam("map") String createdUser){
-        Gson gson =new Gson();
-        User user = gson.fromJson(createdUser, User.class);
-
-        userService.deleteUser(userConverter.toDTO(user));
-
-        return ResponseEntity.ok().body(userConverter.toDTO(user));
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
     }
 
 

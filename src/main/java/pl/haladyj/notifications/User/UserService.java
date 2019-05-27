@@ -49,10 +49,10 @@ public class UserService {
         return userConverter.toDTO(userRepository.save(user));
     }
 
-    public void deleteUser(UserDTO userDTO){
-        User user = userRepository.findById(userDTO.getId()).orElseThrow(()->
-                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o id::%d", userDTO.getId())));
-        userRepository.delete(user);
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(()->
+                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o id::%d", id)));
+        userRepository.deleteById(id);
     }
 
     public User loginUser(String login, String password){
