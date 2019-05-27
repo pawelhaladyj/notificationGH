@@ -4,16 +4,13 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -21,13 +18,15 @@ public class UserController {
 
     private final UserService userService;
     private final UserConverter userConverter;
+    private final UserRepository userRepository;
     private final HttpSession session;
     private final HttpServletRequest request;
 
     @Autowired
-    public UserController(UserService userService, UserConverter userConverter, HttpSession session, HttpServletRequest request) {
+    public UserController(UserService userService, UserConverter userConverter, UserRepository userRepository, HttpSession session, HttpServletRequest request) {
         this.userService = userService;
         this.userConverter = userConverter;
+        this.userRepository = userRepository;
         this.session = session;
         this.request = request;
     }
@@ -45,17 +44,57 @@ public class UserController {
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public User createUser (@Valid @RequestBody UserDTO userDTO){
-           return userConverter.toEntity(userService.createUser(userDTO));
-
+        return userConverter.toEntity(userService.createUser(userDTO));
     }
 
-  /*  @PutMapping(value = "/{id}",
+ /*   @PutMapping(value = "/update",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@PathVariable (value = "id") Long userId, @Valid @RequestBody UserDTO userDTO)
-            throws ResourceNotFoundException{
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO)
+            throws UserNotFoundException{
 
+        userService.updateUser(userDTO);
+
+        return ResponseEntity.noContent().build();
     }*/
+
+
+    @PutMapping(value = "/update",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> update (@RequestBody UserDTO userDTO) {
+
+        Optional<User> user = userRepository.findById(userDTO.getId());
+
+        if (!user.isPresent())
+            return ResponseEntity.notFound().build();
+
+        userService.updateUser(userDTO);
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userDTO);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @DeleteMapping(value = "/delete",
@@ -69,6 +108,10 @@ public class UserController {
 
         return ResponseEntity.ok().body(userConverter.toDTO(user));
     }
+
+
+
+
 
    @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,

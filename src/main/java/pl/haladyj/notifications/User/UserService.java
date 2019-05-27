@@ -1,5 +1,6 @@
 package pl.haladyj.notifications.User;
 
+import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,10 +40,13 @@ public class UserService {
         return userConverter.toDTO(userRepository.save(user));
     }
 
-    public void updateUser(UserDTO userDTO){
+    public UserDTO updateUser (UserDTO userDTO){
         User user = userRepository.findById(userDTO.getId()).orElseThrow(()->
-                new UserNotFoundException(String.format("Nie odnaleziono użytkowniaka o id::%d", userDTO.getId())));
-        userRepository.save(user);
+                new UserNotFoundException(String.format("nie odnaleziono użytkownika o id::%d",userDTO.getId())));
+
+        user = userConverter.toEntity(userDTO);
+
+        return userConverter.toDTO(userRepository.save(user));
     }
 
     public void deleteUser(UserDTO userDTO){
