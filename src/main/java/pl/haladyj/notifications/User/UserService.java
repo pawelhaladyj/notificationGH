@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -40,11 +41,13 @@ public class UserService {
         return userConverter.toDTO(userRepository.save(user));
     }
 
-    public UserDTO updateUser (UserDTO userDTO){
-        User user = userRepository.findById(userDTO.getId()).orElseThrow(()->
-                new UserNotFoundException(String.format("nie odnaleziono użytkownika o id::%d",userDTO.getId())));
+    public UserDTO updateUser (UserDTO userDTO, Long id){
 
-        user = userConverter.toEntity(userDTO);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(!optionalUser.isPresent()){throw new UserNotFoundException(String.format("Użytkownik o id: %d nie istnieje", id));}
+
+        User user = userConverter.toEntity(userDTO);
+        user.setId(id);
 
         return userConverter.toDTO(userRepository.save(user));
     }

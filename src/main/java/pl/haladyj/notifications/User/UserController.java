@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -48,17 +48,12 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "/update",
+    @PutMapping(value = "/{id}",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> update (@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> update (@RequestBody UserDTO userDTO, @PathVariable Long id) {
 
-        Optional<User> user = userRepository.findById(userDTO.getId());
-
-        if (!user.isPresent())
-            return ResponseEntity.notFound().build();
-
-        userService.updateUser(userDTO);
+        userService.updateUser(userDTO, id);
 
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userDTO);
     }
@@ -68,10 +63,6 @@ public class UserController {
     public void deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
     }
-
-
-
-
 
    @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
